@@ -4,9 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
 export default function Index() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     element?.scrollIntoView({ behavior: 'smooth' });
+    setIsMobileMenuOpen(false);
   };
 
   const products = [
@@ -86,12 +89,42 @@ export default function Index() {
                 </button>
               ))}
             </nav>
-            <Button className="bg-primary hover:bg-primary/90 text-white">
-              Получить консультацию
-            </Button>
+            <div className="hidden md:block">
+              <Button className="bg-primary hover:bg-primary/90 text-white">
+                Получить консультацию
+              </Button>
+            </div>
+            <button
+              className="md:hidden p-2"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              <Icon name={isMobileMenuOpen ? 'X' : 'Menu'} size={28} className="text-secondary" />
+            </button>
           </div>
         </div>
       </header>
+
+      {isMobileMenuOpen && (
+        <div className="fixed top-[73px] left-0 right-0 bg-white border-b border-gray-200 z-40 md:hidden animate-fade-in">
+          <nav className="container mx-auto px-6 py-4">
+            <div className="flex flex-col space-y-4">
+              {['Главная', 'О компании', 'Продукция', 'Услуги', 'Портфолио', 'Преимущества', 'Контакты'].map((item) => (
+                <button
+                  key={item}
+                  onClick={() => scrollToSection(item.toLowerCase().replace(/\s/g, '-'))}
+                  className="text-left text-gray-700 hover:text-primary transition-colors font-medium py-2"
+                >
+                  {item}
+                </button>
+              ))}
+              <Button className="bg-primary hover:bg-primary/90 text-white w-full" onClick={() => setIsMobileMenuOpen(false)}>
+                Получить консультацию
+              </Button>
+            </div>
+          </nav>
+        </div>
+      )}
 
       <section id="главная" className="pt-32 pb-20 bg-gradient-to-br from-secondary via-secondary/95 to-gray-900">
         <div className="container mx-auto px-6">
